@@ -1,0 +1,145 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+
+
+model Agence {
+  numeroAgence    Int        @id @default(autoincrement())
+  nomAgence       String     @db.VarChar(100)
+  adresseAgence   String     @db.VarChar(255)
+  telephoneAgence String     @db.VarChar(20)
+  employes        Employe[]
+  clients         Client[]
+
+  @@map("Agence")
+}
+
+model Employe {
+  matricule      String       @id @db.VarChar(50)
+  nomEmploye     String       @db.VarChar(100)
+  prenomEmploye  String       @db.VarChar(100)
+  adresseEmploye String       @db.VarChar(255)
+  dateEmbauche   DateTime     @db.Date
+  numeroAgence   Int
+  email          String       @unique @db.VarChar(255)
+  mot_de_passe   String       @db.VarChar(255)
+  role           Role         @default(TECHNICIEN)
+  agence         Agence       @relation(fields: [numeroAgence], references: [numeroAgence])
+  technicien     Technicien?
+
+  @@map("Employe")
+}
+
+enum Role {
+  TECHNICIEN
+  GESTIONNAIRE
+}
+
+model Technicien {
+  matricule       String         @id @db.VarChar(50)
+  telephoneMobile String         @db.VarChar(20)
+  qualification   String         @db.VarChar(100)
+  dateObtention   DateTime?      @db.Date
+  employe         Employe        @relation(fields: [matricule], references: [matricule], onDelete: Cascade)
+  interventions   Intervention[]
+
+  @@map("Technicien")
+}
+
+model Client {
+  numeroClient     Int                  @id @default(autoincrement())
+  raisonSociale    String               @db.VarChar(150)
+  siren            String               @unique @db.VarChar(14)
+  codeApe          String               @db.VarChar(10)
+  adresse          String               @db.VarChar(255)
+  telephoneClient  String               @db.VarChar(20)
+  email            String               @db.VarChar(255)
+  dureeDeplacement Int
+  distanceKM       Int
+  numeroAgence     Int
+  agence           Agence               @relation(fields: [numeroAgence], references: [numeroAgence])
+  contrats         ContratMaintenance[]
+  materiels        Materiel[]
+  interventions    Intervention[]
+
+  @@map("Client")
+}
+
+model ContratMaintenance {
+  numeroContrat  Int          @id @default(autoincrement())
+  dateSignature  DateTime     @db.Date
+  dateEcheance   DateTime     @db.Date
+  numeroClient   Int
+  refTypeContrat String       @db.VarChar(50)
+  client         Client       @relation(fields: [numeroClient], references: [numeroClient], onDelete: Cascade)
+  typeContrat    TypeContrat  @relation(fields: [refTypeContrat], references: [refTypeContrat])
+  materiels      Materiel[]
+
+  @@map("ContratMaintenance")
+}
+
+model TypeContrat {
+  refTypeContrat    String               @id @db.VarChar(50)
+  delaiIntervention Int
+  tauxApplicable    Decimal              @db.Decimal(5, 2)
+  contrats          ContratMaintenance[]
+
+  @@map("TypeContrat")
+}
+
+model TypeMateriel {
+  referenceInterne   String     @id @db.VarChar(50)
+  libelleTypeMateriel String     @db.VarChar(255)
+  materiels          Materiel[]
+
+  @@map("TypeMateriel")
+}
+
+model Materiel {
+  numeroSerie                  String             @id @db.VarChar(100)
+  dateVente                    DateTime           @db.Date
+  dateInstallation             DateTime           @db.Date
+  prixVente                    Decimal            @db.Decimal(10, 2)
+  emplacement                  String             @db.VarChar(255)
+  referenceInterneTypeMateriel String             @db.VarChar(50)
+  numeroClient                 Int
+  numeroContrat                Int?
+  typeMateriel                 TypeMateriel       @relation(fields: [referenceInterneTypeMateriel], references: [referenceInterne])
+  client                       Client             @relation(fields: [numeroClient], references: [numeroClient], onDelete: Cascade)
+  contrat                      ContratMaintenance? @relation(fields: [numeroContrat], references: [numeroContrat], onDelete: SetNull)
+  controles                    Controler[]
+
+  @@map("Materiel")
+}
+
+model Intervention {
+  numeroIntervent    Int         @id @default(autoincrement())
+  dateVisite         DateTime    @db.Date
+  heureVisite        DateTime    @db.Time
+  matriculeTechnicien String      @db.VarChar(50)
+  numeroClient       Int
+  technicien         Technicien  @relation(fields: [matriculeTechnicien], references: [matricule])
+  client             Client      @relation(fields: [numeroClient], references: [numeroClient], onDelete: Cascade)
+  controles          Controler[]
+
+  @@map("Intervention")
+}
+
+model Controler {
+  numeroIntervent     Int
+  numeroSerieMateriel String       @db.VarChar(100)
+  tempsPasse          Int?
+  commentaire         String?      @db.Text
+  intervention        Intervention @relation(fields: [numeroIntervent], references: [numeroIntervent], onDelete: Cascade)
+  materiel            Materiel     @relation(fields: [numeroSerieMateriel], references: [numeroSerie], onDelete: Cascade)
+
+  @@id([numeroIntervent, numeroSerieMateriel])
+  @@map("Controler")
+}
+
