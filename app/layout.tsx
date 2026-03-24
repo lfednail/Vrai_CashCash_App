@@ -9,8 +9,14 @@ export const metadata: Metadata = {
   title: "CashCash - Gestion des Interventions",
   description: "Solution professionnelle de maintenance pour CashCash",
   themeColor: "#141318",
-  icons: {
-    icon: "/images/cashcash-logov2.png",
+   icons: {
+    icon: [
+      { url: "/images/cashcash-logov2.png", sizes: "32x32", type: "image/png" },
+      { url: "/images/cashcash-logov2.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: [
+      { url: "/images/cashcash-logov2.png", sizes: "180x180" },
+    ],
   },
 };
 
