@@ -8,6 +8,10 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "CashCash - Gestion des Interventions",
   description: "Solution professionnelle de maintenance pour CashCash",
+  themeColor: "#141318",
+  icons: {
+    icon: "/images/cashcash-logov2.png",
+  },
 };
 
 export default function RootLayout({
