@@ -6,9 +6,11 @@ import AuthProvider from "@/components/providers/session-provider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "CashCash - Gestion des Interventions",
+  title: {
+    default: "CashCash - Gestion des Interventions",
+    template: "%s | CashCash | Dashboard | Maintenance | Intervention",
+  },
   description: "Solution professionnelle de maintenance pour CashCash",
-  themeColor: "#141318",
    icons: {
     icon: [
       { url: "/images/cashcash-logov2.png", sizes: "32x32", type: "image/png" },
@@ -18,6 +20,10 @@ export const metadata: Metadata = {
       { url: "/images/cashcash-logov2.png", sizes: "180x180" },
     ],
   },
+};
+
+export const viewport = {
+  themeColor: "#141318",
 };
 
 export default function RootLayout({
