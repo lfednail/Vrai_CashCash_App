@@ -4,28 +4,27 @@ import { NextResponse } from "next/server";
 export const proxy = withAuth(
   function proxy(req) {
     const token = req.nextauth.token;
-    const isGestionnaire = token?.role === "GESTIONNAIRE";
-    const isTechnicien = token?.role === "TECHNICIEN";
-
+    const role = token?.role as string | undefined;
     const path = req.nextUrl.pathname;
 
-    // Protection des routes Gestionnaire
-    if (path.startsWith("/gestionnaire") && !isGestionnaire) {
-      return NextResponse.redirect(new URL("/login", req.url));
+    // Technicien essaie d'accéder au portail gestionnaire → redirigé vers son portail
+    if (path.startsWith("/gestionnaire") && role !== "GESTIONNAIRE") {
+      return NextResponse.redirect(new URL("/technicien", req.url));
     }
 
-    // Protection des routes Technicien
-    if (path.startsWith("/technicien") && !isTechnicien) {
-      return NextResponse.redirect(new URL("/login", req.url));
+    // Gestionnaire essaie d'accéder au portail technicien → redirigé vers son portail
+    if (path.startsWith("/technicien") && role !== "TECHNICIEN") {
+      return NextResponse.redirect(new URL("/gestionnaire", req.url));
     }
   },
   {
     callbacks: {
+      // L'utilisateur doit être authentifié pour accéder aux routes protégées
+      // (sinon withAuth le redirige automatiquement vers /login)
       authorized: ({ token }) => !!token,
     },
   }
 );
-
 
 export const config = {
   matcher: ["/gestionnaire/:path*", "/technicien/:path*", "/api/((?!auth).)*"],

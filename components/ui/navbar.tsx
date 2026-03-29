@@ -19,9 +19,9 @@ export default async function Navbar() {
           <div className="flex items-center gap-8">
             <Link href="/" className="flex items-center gap-2 font-bold text-xl text-slate-800">
               <img 
-                src="/images/cashcash-logo.png" 
+                src="/images/cashcash-logov2.png" 
                 alt="CashCash" 
-                className="h-8 w-auto object-contain"
+                className="h-12 w-auto object-contain"
               />
             </Link>
 

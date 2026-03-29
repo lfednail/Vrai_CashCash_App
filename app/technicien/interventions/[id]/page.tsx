@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import Navbar from "@/components/ui/navbar";
 import { ArrowLeft, MapPin, Building2, Package, History } from "lucide-react";
 import Link from "next/link";
-import InterventionValidationForm from "./validation-form";
+import InterventionValidationForm from "@/app/technicien/interventions/[id]/validation-form";
 
 export default async function InterventionDetailsPage({ params }: { params: { id: string } }) {
   const { id } = await params;

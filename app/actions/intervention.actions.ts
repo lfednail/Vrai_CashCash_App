@@ -8,11 +8,11 @@ import { revalidatePath } from "next/cache";
 
 export async function getTechnicianInterventions() {
   const session = await getServerSession(authOptions);
-  if (!session || (session.user as any).role !== "TECHNICIEN") {
+  if (!session || session.user.role !== "TECHNICIEN") {
     throw new Error("Non autorisé");
   }
 
-  const matricule = (session.user as any).id;
+  const matricule = session.user.id;
 
   return await prisma.intervention.findMany({
     where: { matriculeTechnicien: matricule },
@@ -35,7 +35,7 @@ export async function validateIntervention(
   controles: { numeroSerieMateriel: string; tempsPasse: number; commentaire: string }[]
 ) {
   const session = await getServerSession(authOptions);
-  if (!session || (session.user as any).role !== "TECHNICIEN") {
+  if (!session || session.user.role !== "TECHNICIEN") {
     throw new Error("Non autorisé");
   }
 
