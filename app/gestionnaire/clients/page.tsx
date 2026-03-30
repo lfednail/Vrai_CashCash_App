@@ -50,7 +50,7 @@ export default async function ClientsPage() {
             {/* Infographie Client */}
             <div className="p-6 md:w-1/3 space-y-4 text-left">
               <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600 font-bold">
+                <div className="h-10 w-10 rounded-lg bg-secondary/10 flex items-center justify-center text-secondary font-bold">
                   {client.raisonSociale.slice(0, 2).toUpperCase()}
                 </div>
                 <div>

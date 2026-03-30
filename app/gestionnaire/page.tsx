@@ -20,8 +20,8 @@ export default async function GestionnaireDashboard() {
       title: "Interventions ce mois",
       value: stats.total_interventions,
       icon: ClipboardCheck,
-      color: "text-blue-600",
-      bg: "bg-blue-100"
+      color: "text-slate-600",
+      bg: "bg-secondary/20"
     },
     {
       title: "Distance totale parcourue",
@@ -55,7 +55,7 @@ export default async function GestionnaireDashboard() {
           <p className="text-slate-500 mt-1 text-left">Aperçu de l'activité de votre agence pour le mois en cours</p>
         </div>
         <div className="flex items-center gap-2 rounded-xl bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm border border-slate-200">
-          <CalendarDays className="h-4 w-4 text-blue-600" />
+          <CalendarDays className="h-4 w-4 text-emerald-600" />
           {new Intl.DateTimeFormat('fr-FR', { month: 'long', year: 'numeric' }).format(new Date())}
         </div>
       </div>
@@ -81,7 +81,7 @@ export default async function GestionnaireDashboard() {
         <div className="lg:col-span-1 border border-slate-200 bg-white shadow-sm overflow-hidden flex flex-col rounded-3xl">
           <div className="border-b border-slate-100 bg-slate-50/50 px-6 py-4 flex justify-between items-center">
               <h2 className="font-bold text-slate-800 flex items-center gap-2">
-                  <Users className="h-5 w-5 text-blue-600" />
+                  <Users className="h-5 w-5 text-emerald-600" />
                   Techniciens de l'agence
               </h2>
           </div>
@@ -92,7 +92,7 @@ export default async function GestionnaireDashboard() {
               technicians.map((tech: any) => (
                 <div key={tech.matricule} className="flex items-center justify-between p-4 px-6 hover:bg-slate-50/50 transition-colors group">
                   <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-lg bg-blue-50 flex items-center justify-center text-sm font-bold text-blue-700 group-hover:bg-blue-100 transition-colors">
+                      <div className="h-10 w-10 rounded-lg bg-secondary/10 flex items-center justify-center text-sm font-bold text-slate-700 group-hover:bg-secondary/20 transition-colors">
                           {tech.employe.prenomEmploye[0]}{tech.employe.nomEmploye[0]}
                       </div>
                       <div className="text-sm text-left">
@@ -113,11 +113,11 @@ export default async function GestionnaireDashboard() {
         <div className="lg:col-span-2 border border-slate-200 bg-white shadow-sm p-6 flex flex-col rounded-3xl">
           <div className="flex items-center justify-between mb-8">
               <h3 className="font-bold text-slate-800 flex items-center gap-2">
-                  <Activity className="h-5 w-5 text-blue-600" />
+                  <Activity className="h-5 w-5 text-emerald-600" />
                   Performance hebdomadaire (Nb d'interventions)
               </h3>
               <div className="flex items-center gap-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                  <span className="h-2 w-2 rounded-full bg-blue-500"></span>
+                  <span className="h-2 w-2 rounded-full bg-secondary"></span>
                   Interventions Validées
               </div>
           </div>

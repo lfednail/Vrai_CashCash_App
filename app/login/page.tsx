@@ -81,7 +81,7 @@ export default function LoginPage() {
               </label>
               <div className="relative mt-2">
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
-                  <Mail className="h-5 w-5 text-slate-400" />
+                  <Mail className="h-5 w-5 text-primary" />
                 </div>
                 <input
                   id="identifier"
@@ -89,7 +89,7 @@ export default function LoginPage() {
                   required
                   value={identifier}
                   onChange={(e) => setIdentifier(e.target.value)}
-                  className="block w-full rounded-xl border border-slate-200 bg-slate-50 text-slate-900 py-3 pl-11 pr-4 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 focus:bg-white transition-all sm:text-sm outline-none"
+                  className="block w-full rounded-xl border border-secondary bg-[#f7c0b5] text-slate-900 py-3 pl-11 pr-4 focus:ring-2 focus:ring-secondary transition-all sm:text-sm outline-none placeholder:text-slate-600 font-medium"
                   placeholder="nom@cashcash.fr ou TECH001"
                 />
               </div>
@@ -105,7 +105,7 @@ export default function LoginPage() {
               </label>
               <div className="relative mt-2">
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
-                  <Lock className="h-5 w-5 text-slate-400" />
+                  <Lock className="h-5 w-5 text-primary" />
                 </div>
                 <input
                   id="password"
@@ -113,7 +113,7 @@ export default function LoginPage() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full rounded-xl border border-slate-200 bg-slate-50 text-slate-900 py-3 pl-11 pr-4 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 focus:bg-white transition-all sm:text-sm outline-none"
+                  className="block w-full rounded-xl border border-secondary bg-[#f7c0b5] text-slate-900 py-3 pl-11 pr-4 focus:ring-2 focus:ring-secondary transition-all sm:text-sm outline-none placeholder:text-slate-600 font-medium"
                   placeholder="••••••••"
                 />
               </div>
@@ -123,7 +123,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="flex w-full justify-center items-center gap-2 rounded-xl bg-primary px-4 py-3.5 text-sm font-bold text-white shadow-lg shadow-blue-600/20 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+            className="flex w-full justify-center items-center gap-2 rounded-xl bg-primary px-4 py-3.5 text-sm font-bold text-white shadow-lg shadow-secondary/20 hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed transition-all"
           >
             {loading ? (
               <Loader2 className="h-5 w-5 animate-spin" />

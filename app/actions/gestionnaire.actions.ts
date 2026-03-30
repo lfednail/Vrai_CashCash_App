@@ -60,7 +60,7 @@ export async function getClientsWithMaterials() {
     where: { matricule: session.user.id },
   });
 
-  return await prisma.client.findMany({
+  const clients = await prisma.client.findMany({
     where: { numeroAgence: user?.numeroAgence },
     include: {
       materiels: {
@@ -76,6 +76,15 @@ export async function getClientsWithMaterials() {
       },
     },
   });
+
+  // Sérialisation des Decimal pour Next.js Client Components
+  return clients.map(client => ({
+    ...client,
+    materiels: client.materiels.map(mat => ({
+        ...mat,
+        prixVente: mat.prixVente.toNumber()
+    }))
+  }));
 }
 
 export async function getTechniciansByAgency() {
@@ -138,7 +147,7 @@ export async function getClientInterventions(clientId: number) {
   const session = await getServerSession(authOptions);
   if (!session || session.user.role !== "GESTIONNAIRE") throw new Error("Non autorisé");
 
-  return prisma.intervention.findMany({
+  const interventions = await prisma.intervention.findMany({
     where: { numeroClient: clientId },
     include: {
       technicien: { include: { employe: true } },
@@ -146,6 +155,17 @@ export async function getClientInterventions(clientId: number) {
     },
     orderBy: { dateVisite: "desc" },
   });
+
+  return interventions.map(inter => ({
+    ...inter,
+    controles: inter.controles.map(ctrl => ({
+        ...ctrl,
+        materiel: {
+            ...ctrl.materiel,
+            prixVente: ctrl.materiel.prixVente.toNumber()
+        }
+    }))
+  }));
 }
 
 /**
@@ -155,7 +175,7 @@ export async function getClientMaterials(clientId: number) {
     const session = await getServerSession(authOptions);
     if (!session || session.user.role !== "GESTIONNAIRE") throw new Error("Non autorisé");
   
-    return prisma.materiel.findMany({
+    const materials = await prisma.materiel.findMany({
       where: { numeroClient: clientId },
       include: {
         typeMateriel: true,
@@ -163,6 +183,11 @@ export async function getClientMaterials(clientId: number) {
       },
       orderBy: { dateInstallation: "desc" },
     });
+
+    return materials.map(mat => ({
+        ...mat,
+        prixVente: mat.prixVente.toNumber()
+    }));
 }
 
 /**

@@ -86,7 +86,7 @@ export default async function ClientHistoriquePage({ params }: { params: { id: s
                        )}
                     </td>
                     <td className="px-6 py-4 text-right">
-                       <Link href="/gestionnaire/assigner" className="text-blue-600 hover:underline font-bold text-xs transition-all">
+                       <Link href="/gestionnaire/assigner" className="text-secondary hover:underline font-bold text-xs transition-all">
                           Modifier
                        </Link>
                     </td>

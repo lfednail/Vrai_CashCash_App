@@ -73,12 +73,12 @@ export const generateInterventionPDF = async (intervention: any) => {
   doc.text("Fiche d'Intervention Technique", 15, 35); // Pushed down to avoid overlap
 
   // N° INT001 BOX (Top Right)
-  doc.setDrawColor(56, 189, 248); // blue-400
+  doc.setDrawColor(247, 192, 181); // secondary (Saumon)
   doc.setFillColor(255, 255, 255);
   doc.roundedRect(pageWidth - 45, 18, 30, 8, 2, 2, "FD");
   doc.setFontSize(9);
   doc.setFont("helvetica", "bold");
-  doc.setTextColor(2, 132, 199); // blue-600
+  doc.setTextColor(0, 103, 79); // primary (Vert Forêt)
   doc.text(`N° ${intNumberStr}`, pageWidth - 30, 23.5, { align: "center" });
 
   let y = 45;
@@ -160,8 +160,8 @@ export const generateInterventionPDF = async (intervention: any) => {
       y = 20;
     }
     
-    // Green border Box
-    doc.setDrawColor(74, 222, 128); // green-400 stroke (plus fonce pour etre visible)
+    // Primary border Box
+    doc.setDrawColor(0, 103, 79); // primary (Vert Forêt)
     doc.setFillColor(255, 255, 255);
     doc.setLineWidth(0.8);
     
@@ -189,16 +189,21 @@ export const generateInterventionPDF = async (intervention: any) => {
   y = drawSectionHeader("RAPPORT D'INTERVENTION", y);
 
   intervention.controles?.forEach((c: any) => {
-    if (y > 250) {
+    const maxWidth = pageWidth - 40;
+    const text = c.commentaire || "Test OK - Matériel fonctionnel";
+    const commentLines = doc.splitTextToSize(text, maxWidth);
+    const boxHeight = 15 + (commentLines.length * 5);
+
+    if (y + boxHeight > 270) {
       doc.addPage();
       y = 20;
     }
     
-    // Blue border Box
-    doc.setDrawColor(147, 197, 253); // blue-300 stroke (plus fonce pour etre visible)
+    // Secondary border Box (Salmon)
+    doc.setDrawColor(247, 192, 181); // secondary (Saumon)
     doc.setFillColor(255, 255, 255);
     doc.setLineWidth(0.8);
-    doc.roundedRect(15, y, pageWidth - 30, 22, 2, 2, "FD");
+    doc.roundedRect(15, y, pageWidth - 30, boxHeight, 2, 2, "FD");
     
     doc.setFontSize(9);
     doc.setFont("helvetica", "bold");
@@ -208,15 +213,16 @@ export const generateInterventionPDF = async (intervention: any) => {
     
     doc.setFontSize(8);
     doc.setFont("helvetica", "normal");
-    doc.text(`Temps passé : `, 18, y + 12);
+    doc.text(`Temps passé : `, 18, y + 11);
     doc.setFont("helvetica", "bold");
     const tPasse = c.tempsPasse !== undefined && c.tempsPasse !== null ? c.tempsPasse : "45";
-    doc.text(`${tPasse} minutes`, 40, y + 12);
+    doc.text(`${tPasse} minutes`, 40, y + 11);
     
     doc.setFont("helvetica", "normal");
-    doc.text(c.commentaire || "Test OK - Matériel fonctionnel", 18, y + 18);
+    doc.setTextColor(80, 80, 80);
+    doc.text(commentLines, 18, y + 17);
     
-    y += 26;
+    y += boxHeight + 8;
   });
 
   y += 10;

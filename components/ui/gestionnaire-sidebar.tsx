@@ -61,13 +61,13 @@ export default function GestionnaireSidebar() {
                 href={item.href}
                 className={`group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all ${
                   isActive
-                    ? "bg-blue-50 text-blue-700 shadow-sm border border-blue-100"
+                    ? "bg-emerald-50 text-emerald-700 shadow-sm border border-emerald-100"
                     : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                 }`}
               >
                 <item.icon
                   className={`h-5 w-5 shrink-0 transition-colors ${
-                    isActive ? "text-blue-600" : "text-slate-400 group-hover:text-slate-600"
+                    isActive ? "text-emerald-600" : "text-slate-400 group-hover:text-slate-600"
                   }`}
                 />
                 {item.title}

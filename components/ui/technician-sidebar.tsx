@@ -37,13 +37,13 @@ export default function TechnicianSidebar() {
               className={cn(
                 "flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors group",
                 isActive 
-                  ? "bg-blue-50 text-blue-600 border-l-4 border-blue-600" 
+                  ? "bg-emerald-50 text-emerald-600 border-l-4 border-emerald-600" 
                   : "text-slate-500 hover:bg-slate-50 hover:text-slate-900 border-l-4 border-transparent"
               )}
             >
               <item.icon className={cn(
                 "h-5 w-5",
-                isActive ? "text-blue-600" : "text-slate-400 group-hover:text-slate-600"
+                isActive ? "text-emerald-600" : "text-slate-400 group-hover:text-slate-600"
               )} />
               <span className="flex-1">{item.label}</span>
             </Link>

@@ -66,7 +66,7 @@ export default async function TechnicienDashboard() {
             <p className="text-sm text-slate-500 font-medium">Interventions aujourd'hui</p>
             <p className="text-2xl font-bold text-slate-800 mt-2">{stats.today}</p>
           </div>
-          <div className="h-12 w-12 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600">
+          <div className="h-12 w-12 rounded-lg bg-secondary/20 flex items-center justify-center text-secondary">
             <CalendarDays className="h-6 w-6" />
           </div>
         </div>
@@ -111,9 +111,9 @@ export default async function TechnicienDashboard() {
             <input 
               type="text" 
               placeholder="Entrez le numéro de client" 
-              className="flex-1 rounded-lg border border-slate-200 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="flex-1 rounded-lg border border-slate-200 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-secondary"
             />
-            <Link href="/technicien/recherche" className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg flex items-center gap-2 font-medium transition-colors">
+            <Link href="/technicien/recherche" className="bg-primary hover:bg-primary-hover text-white px-6 py-2.5 rounded-lg flex items-center gap-2 font-medium transition-colors">
               <Search className="h-4 w-4" />
               Aller à la recherche
             </Link>
@@ -186,8 +186,8 @@ export default async function TechnicienDashboard() {
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex gap-3">
-                          <Link href={`/technicien/interventions/${intervention.numeroIntervent}`} className="text-blue-600 hover:text-blue-800 transition-colors">
-                            {pending ? <Edit className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                          <Link href={`/technicien/interventions/${intervention.numeroIntervent}`} className="text-secondary hover:text-secondary/80 transition-colors text-xs font-bold uppercase tracking-widest flex items-center gap-1">
+                            {pending ? <><Edit className="h-4 w-4" /> Compléter</> : <><Eye className="h-4 w-4" /> Voir</>}
                           </Link>
                         </div>
                       </td>
@@ -204,7 +204,7 @@ export default async function TechnicienDashboard() {
             Affichage de {Math.min(interventions.length, 5)} sur {interventions.length} résultats
           </div>
           <div className="flex gap-4">
-            <Link href="/technicien/interventions" className="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors">
+            <Link href="/technicien/interventions" className="px-4 py-2 bg-secondary text-white rounded-lg font-medium hover:bg-secondary/80 transition-colors">
               Voir tout
             </Link>
           </div>

@@ -23,7 +23,7 @@ export default async function ClientParcPage({ params }: { params: { id: string 
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
            <div className="flex items-center gap-3 mb-2">
-             <div className="h-10 w-10 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600">
+             <div className="h-10 w-10 rounded-xl bg-secondary/20 flex items-center justify-center text-secondary">
                 <Package className="h-6 w-6" />
              </div>
              <h1 className="text-3xl font-bold text-slate-900">{client.raisonSociale}</h1>

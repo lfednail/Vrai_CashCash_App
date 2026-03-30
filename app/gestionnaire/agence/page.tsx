@@ -64,16 +64,13 @@ export default async function AgencePage() {
       {/* Header Institutionnel */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-slate-200 pb-10">
           <div className="space-y-1 text-left">
-              <div className="flex items-center gap-2 text-[10px] font-extrabold text-blue-600 uppercase tracking-[0.2em] mb-2">
-                 <div className="h-1.5 w-1.5 rounded-full bg-blue-600" /> Profil Agence Officiel
+              <div className="flex items-center gap-2 text-[10px] font-extrabold text-secondary uppercase tracking-[0.2em] mb-2">
+                 <div className="h-1.5 w-1.5 rounded-full bg-secondary" /> Profil Agence Officiel
               </div>
               <h1 className="text-4xl font-bold text-slate-900 tracking-tight">
                   {agence.nomAgence}
               </h1>
-              <p className="text-slate-500 font-medium max-w-lg">
-                  Gestionnaire de centre de profit pour l'infrastructure CashCash. 
-                  Dernière synchronisation : {new Date().toLocaleTimeString("fr-FR", { hour: '2-digit', minute: '2-digit' })}.
-              </p>
+             
           </div>
           <div className="flex gap-4">
               <button className="px-5 py-2.5 bg-slate-900 text-white rounded-xl text-sm font-bold shadow-lg hover:bg-slate-800 transition-all flex items-center gap-2">
@@ -85,7 +82,7 @@ export default async function AgencePage() {
       {/* Overview Cards Style Dashbaord Corporate */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
-            { label: "Clients Portefeuille", value: totalClients, icon: Users, color: "text-blue-600", border: "border-blue-100" },
+            { label: "Clients Portefeuille", value: totalClients, icon: Users, color: "text-secondary", border: "border-secondary/20" },
             { label: "Effectif Technicien", value: totalTechs, icon: User2, color: "text-emerald-600", border: "border-emerald-100" },
             { label: "Unités de Parc", value: totalMateriels, icon: Zap, color: "text-orange-600", border: "border-orange-100" },
             { label: "Contrats Actifs", value: totalContrats, icon: TrendingUp, color: "text-purple-600", border: "border-purple-100" },
@@ -111,7 +108,7 @@ export default async function AgencePage() {
               <div className="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm">
                   <div className="p-8 border-b border-slate-100 flex items-center justify-between bg-slate-50/30">
                       <h2 className="text-lg font-bold text-slate-900 flex items-center gap-3 text-left">
-                          <Building2 className="h-5 w-5 text-blue-600" />
+                          <Building2 className="h-5 w-5 text-secondary" />
                           Configuration Structurelle
                       </h2>
                       <span className="px-3 py-1 bg-white border border-slate-200 rounded-full text-[10px] font-bold text-slate-500 uppercase">
@@ -158,7 +155,7 @@ export default async function AgencePage() {
                           </div>
                           
                           <div className="relative z-10 flex items-center gap-4">
-                             <div className="h-12 w-12 rounded-full bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-200">
+                             <div className="h-12 w-12 rounded-full bg-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-200">
                                 <MapIcon className="h-6 w-6 text-white" />
                              </div>
                              <div>
@@ -185,7 +182,7 @@ export default async function AgencePage() {
               <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
                   <div className="p-8 border-b border-slate-100 flex items-center justify-between">
                       <h2 className="text-lg font-bold text-slate-900 text-left">Effectifs de l'Agence</h2>
-                      <Link href="/gestionnaire/techniciens" className="text-xs font-extrabold text-blue-600 hover:text-blue-800 transition-all flex items-center gap-1">
+                      <Link href="/gestionnaire/techniciens" className="text-xs font-extrabold text-secondary hover:text-primary transition-all flex items-center gap-1">
                           LISTE COMPLÈTE <ChevronRight className="h-3 w-3" />
                       </Link>
                   </div>
@@ -220,7 +217,7 @@ export default async function AgencePage() {
                       <div className="space-y-4">
                           <Link href="/gestionnaire/assigner" className="flex items-center justify-between p-5 bg-white/5 hover:bg-white/10 rounded-2xl border border-white/5 transition-all group">
                              <div className="flex items-center gap-4">
-                                <div className="h-10 w-10 rounded-xl bg-blue-500/20 flex items-center justify-center text-blue-400">
+                                <div className="h-10 w-10 rounded-xl bg-secondary/20 flex items-center justify-center text-secondary">
                                    <Calendar className="h-5 w-5" />
                                 </div>
                                 <span className="text-sm font-bold">Planification Missions</span>
