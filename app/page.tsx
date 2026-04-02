@@ -135,9 +135,9 @@ export default async function HomePage() {
             <span className="font-bold">CashCash Maintenance © 2026</span>
           </div>
           <div className="flex gap-8 text-sm text-slate-400">
-            <a href="#" className="hover:text-primary transition-colors">Mentions Légales</a>
-            <a href="#" className="hover:text-primary transition-colors">Confidentialité</a>
-            <a href="#" className="hover:text-primary transition-colors">Support</a>
+            <Link href="/footer/mentions-legales" className="hover:text-primary transition-colors">Mentions Légales</Link>
+            <Link href="/footer/confidentialite" className="hover:text-primary transition-colors">Confidentialité</Link>
+            <Link href="/footer/support" className="hover:text-primary transition-colors">Support</Link>
           </div>
         </div>
       </footer>
