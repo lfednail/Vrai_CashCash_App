@@ -13,6 +13,7 @@ async function main() {
   await prisma.contratMaintenance.deleteMany();
   await prisma.typeContrat.deleteMany();
   await prisma.typeMateriel.deleteMany();
+  await prisma.famille.deleteMany();
   await prisma.client.deleteMany();
   await prisma.technicien.deleteMany();
   await prisma.employe.deleteMany();
@@ -44,20 +45,33 @@ async function main() {
   });
 
   // ─────────────────────────────────────────────────────────────
+  // Familles
+  // ─────────────────────────────────────────────────────────────
+  console.log('Seeding families...');
+  await prisma.famille.createMany({
+    data: [
+      { codeFamille: 'POM', libelleFamille: 'Postes de vente' },
+      { codeFamille: 'MON', libelleFamille: 'Monétique' },
+      { codeFamille: 'ADR', libelleFamille: 'Acquisition de données' },
+      { codeFamille: 'ACC', libelleFamille: 'Accessoires' },
+    ],
+  });
+
+  // ─────────────────────────────────────────────────────────────
   // Types de matériel
   // ─────────────────────────────────────────────────────────────
   console.log('Seeding material types...');
   const materialTypes = [
-    { ref: 'TM-CAISSE',    label: 'Caisse Enregistreuse Tactile' },
-    { ref: 'TM-TPE',       label: 'Terminal de Paiement Électronique' },
-    { ref: 'TM-IMPRIMANTE',label: 'Imprimante Ticket Thermique' },
-    { ref: 'TM-SCANNER',   label: 'Scanner Code-Barre 2D' },
-    { ref: 'TM-ECRAN',     label: 'Écran Client Orientable' },
-    { ref: 'TM-TIROIR',    label: 'Tiroir-Caisse Motorisé' },
-    { ref: 'TM-MOBILE',    label: 'Terminal Mobile Android' },
+    { ref: 'TM-CAISSE',    label: 'Caisse Enregistreuse Tactile', fam: 'POM' },
+    { ref: 'TM-TPE',       label: 'Terminal de Paiement Électronique', fam: 'MON' },
+    { ref: 'TM-IMPRIMANTE',label: 'Imprimante Ticket Thermique', fam: 'ACC' },
+    { ref: 'TM-SCANNER',   label: 'Scanner Code-Barre 2D', fam: 'ADR' },
+    { ref: 'TM-ECRAN',     label: 'Écran Client Orientable', fam: 'ACC' },
+    { ref: 'TM-TIROIR',    label: 'Tiroir-Caisse Motorisé', fam: 'ACC' },
+    { ref: 'TM-MOBILE',    label: 'Terminal Mobile Android', fam: 'POM' },
   ];
   for (const mt of materialTypes) {
-    await prisma.typeMateriel.create({ data: { referenceInterne: mt.ref, libelleTypeMateriel: mt.label } });
+    await prisma.typeMateriel.create({ data: { referenceInterne: mt.ref, libelleTypeMateriel: mt.label, codeFamille: mt.fam } });
   }
 
   // ─────────────────────────────────────────────────────────────

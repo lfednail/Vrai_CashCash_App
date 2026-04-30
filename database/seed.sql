@@ -20,10 +20,17 @@ INSERT INTO Client (RaisonSociale, Siren, CodeApe, Adresse, TelephoneClient, Ema
 ('Entreprise XYZ', '12345678901234', '6201Z', '100 rue de Bercy 75012 Paris', '0198765432', 'contact@xyz.fr', 30, 15, 1),
 ('Boutique ABC', '98765432109876', '4711D', '5 place Bellecour 69002 Lyon', '0412345678', 'hello@abc.com', 15, 5, 2);
 
+-- Familles
+INSERT INTO Famille (CodeFamille, LibelleFamille) VALUES 
+('POM', 'Postes de vente'),
+('MON', 'Monétique'),
+('ADR', 'Acquisition de données'),
+('ACC', 'Accessoires');
+
 -- Types de Matériel
-INSERT INTO TypeMateriel (ReferenceInterne, LibelleTypeMateriel) VALUES 
-('TM-CAISSE', 'Caisse Enregistreuse Tactile'),
-('TM-TPE', 'Terminal de Paiement Électronique');
+INSERT INTO TypeMateriel (ReferenceInterne, LibelleTypeMateriel, CodeFamille) VALUES 
+('TM-CAISSE', 'Caisse Enregistreuse Tactile', 'POM'),
+('TM-TPE', 'Terminal de Paiement Électronique', 'MON');
 
 -- Types de Contrat
 INSERT INTO TypeContrat (RefTypeContrat, DelaiIntervention, TauxApplicable) VALUES 

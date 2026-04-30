@@ -96,9 +96,19 @@ model TypeContrat {
 model TypeMateriel {
   referenceInterne   String     @id @db.VarChar(50)
   libelleTypeMateriel String     @db.VarChar(255)
+  codeFamille        String     @db.VarChar(50)
+  famille            Famille    @relation(fields: [codeFamille], references: [codeFamille])
   materiels          Materiel[]
 
   @@map("TypeMateriel")
+}
+
+model Famille {
+  codeFamille    String         @id @db.VarChar(50)
+  libelleFamille String         @db.VarChar(255)
+  typesMateriel  TypeMateriel[]
+
+  @@map("Famille")
 }
 
 model Materiel {

@@ -13,13 +13,21 @@ DROP TABLE IF EXISTS Employe;
 DROP TABLE IF EXISTS Agence;
 DROP TABLE IF EXISTS TypeContrat;
 DROP TABLE IF EXISTS TypeMateriel;
+DROP TABLE IF EXISTS Famille;
 
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- 1. Tables de référence
+CREATE TABLE Famille (
+    CodeFamille VARCHAR(50) PRIMARY KEY,
+    LibelleFamille VARCHAR(255) NOT NULL
+);
+
 CREATE TABLE TypeMateriel (
     ReferenceInterne VARCHAR(50) PRIMARY KEY,
-    LibelleTypeMateriel VARCHAR(255) NOT NULL
+    LibelleTypeMateriel VARCHAR(255) NOT NULL,
+    CodeFamille VARCHAR(50) NOT NULL,
+    FOREIGN KEY (CodeFamille) REFERENCES Famille(CodeFamille) ON DELETE RESTRICT
 );
 
 CREATE TABLE TypeContrat (
