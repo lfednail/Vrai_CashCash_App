@@ -45,6 +45,7 @@ erDiagram
     INTERVENTION ||--o{ CONTROLER : "Détaille"
     MATERIEL ||--o{ CONTROLER : "Est contrôlé par"
 ```
+![Le MCD](./public/images/mdc_mysql.png)
 
 ---
 
@@ -55,7 +56,7 @@ erDiagram
 2. **Variables d'environnement** :
    - Créez un fichier `.env` à la racine :
      ```env
-     DATABASE_URL="mysql://user:password@localhost:3306/cashcash_db"
+     DATABASE_URL="mysql://user:password@localhost:3306/cashcash_final_app"
      NEXTAUTH_SECRET="votre_secret_aleatoire"
      NEXTAUTH_URL="http://localhost:3000"
      ```
