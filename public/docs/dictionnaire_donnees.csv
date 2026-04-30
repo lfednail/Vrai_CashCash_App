@@ -1,0 +1,58 @@
+Table,Colonne,Type,Nullable,CP,CE,Reference,Description
+Famille,CodeFamille,VARCHAR(50),NON,OUI,NON,,Code unique de la famille
+Famille,LibelleFamille,VARCHAR(255),NON,NON,NON,,Libellé de la famille
+TypeMateriel,ReferenceInterne,VARCHAR(50),NON,OUI,NON,,Référence interne du type de matériel
+TypeMateriel,LibelleTypeMateriel,VARCHAR(255),NON,NON,NON,,Libellé du type de matériel
+TypeMateriel,CodeFamille,VARCHAR(50),NON,NON,OUI,Famille(CodeFamille),Code de la famille associée
+TypeContrat,RefTypeContrat,VARCHAR(50),NON,OUI,NON,,Référence du type de contrat
+TypeContrat,DelaiIntervention,INT,NON,NON,NON,,Délai d'intervention en heures
+TypeContrat,TauxApplicable,DECIMAL(5,2),NON,NON,NON,,Taux applicable pour le contrat
+Agence,NumeroAgence,INT,NON,OUI,NON,,Numéro unique de l'agence
+Agence,NomAgence,VARCHAR(100),NON,NON,NON,,Nom de l'agence
+Agence,AdresseAgence,VARCHAR(255),NON,NON,NON,,Adresse physique de l'agence
+Agence,TelephoneAgence,VARCHAR(20),NON,NON,NON,,Numéro de téléphone de l'agence
+Employe,Matricule,VARCHAR(50),NON,OUI,NON,,Matricule unique de l'employé
+Employe,NomEmploye,VARCHAR(100),NON,NON,NON,,Nom de l'employé
+Employe,PrenomEmploye,VARCHAR(100),NON,NON,NON,,Prénom de l'employé
+Employe,AdresseEmploye,VARCHAR(255),NON,NON,NON,,Adresse de l'employé
+Employe,DateEmbauche,DATE,NON,NON,NON,,Date d'embauche de l'employé
+Employe,NumeroAgence,INT,NON,NON,OUI,Agence(NumeroAgence),Agence de rattachement
+Employe,email,VARCHAR(255),NON,NON,NON,,Adresse email (unique)
+Employe,mot_de_passe,VARCHAR(255),NON,NON,NON,,Mot de passe haché
+Employe,role,ENUM,NON,NON,NON,,Rôle (TECHNICIEN ou GESTIONNAIRE)
+Technicien,Matricule,VARCHAR(50),NON,OUI,OUI,Employe(Matricule),Matricule (lié à l'employé)
+Technicien,TelephoneMobile,VARCHAR(20),NON,NON,NON,,Numéro de téléphone mobile
+Technicien,Qualification,VARCHAR(100),NON,NON,NON,,Qualification du technicien
+Technicien,DateObtention,DATE,OUI,NON,NON,,Date d'obtention de la qualification
+Client,NumeroClient,INT,NON,OUI,NON,,Numéro unique du client
+Client,RaisonSociale,VARCHAR(150),NON,NON,NON,,Raison sociale de l'entreprise
+Client,Siren,VARCHAR(14),NON,NON,NON,,Numéro SIREN (unique)
+Client,CodeApe,VARCHAR(10),NON,NON,NON,,Code APE de l'entreprise
+Client,Adresse,VARCHAR(255),NON,NON,NON,,Adresse du client
+Client,TelephoneClient,VARCHAR(20),NON,NON,NON,,Téléphone du client
+Client,Email,VARCHAR(255),NON,NON,NON,,Email de contact
+Client,DureeDeplacement,INT,NON,NON,NON,,Durée de déplacement estimée (min)
+Client,DistanceKM,INT,NON,NON,NON,,Distance en kilomètres
+Client,NumeroAgence,INT,NON,NON,OUI,Agence(NumeroAgence),Agence gérant le client
+ContratMaintenance,NumeroContrat,INT,NON,OUI,NON,,Numéro unique du contrat
+ContratMaintenance,DateSignature,DATE,NON,NON,NON,,Date de signature du contrat
+ContratMaintenance,DateEcheance,DATE,NON,NON,NON,,Date d'échéance du contrat
+ContratMaintenance,NumeroClient,INT,NON,NON,OUI,Client(NumeroClient),Client associé au contrat
+ContratMaintenance,RefTypeContrat,VARCHAR(50),NON,NON,OUI,TypeContrat(RefTypeContrat),Type de contrat appliqué
+Materiel,NumeroSerie,VARCHAR(100),NON,OUI,NON,,Numéro de série unique
+Materiel,DateVente,DATE,NON,NON,NON,,Date de vente du matériel
+Materiel,DateInstallation,DATE,NON,NON,NON,,Date d'installation
+Materiel,PrixVente,DECIMAL(10,2),NON,NON,NON,,Prix de vente du matériel
+Materiel,Emplacement,VARCHAR(255),NON,NON,NON,,Emplacement chez le client
+Materiel,ReferenceInterneTypeMateriel,VARCHAR(50),NON,NON,OUI,TypeMateriel(ReferenceInterne),Type de matériel
+Materiel,NumeroClient,INT,NON,NON,OUI,Client(NumeroClient),Propriétaire du matériel
+Materiel,NumeroContrat,INT,OUI,NON,OUI,ContratMaintenance(NumeroContrat),Contrat de maintenance associé
+Intervention,NumeroIntervent,INT,NON,OUI,NON,,Numéro unique de l'intervention
+Intervention,DateVisite,DATE,NON,NON,NON,,Date de la visite
+Intervention,HeureVisite,TIME,NON,NON,NON,,Heure de la visite
+Intervention,MatriculeTechnicien,VARCHAR(50),NON,NON,OUI,Technicien(Matricule),Technicien ayant intervenu
+Intervention,NumeroClient,INT,NON,NON,OUI,Client(NumeroClient),Client concerné
+Controler,NumeroIntervent,INT,NON,OUI,OUI,Intervention(NumeroIntervent),Intervention associée
+Controler,NumeroSerieMateriel,VARCHAR(100),NON,OUI,OUI,Materiel(NumeroSerie),Matériel contrôlé
+Controler,TempsPasse,INT,OUI,NON,NON,,Temps passé sur le matériel (min)
+Controler,Commentaire,TEXT,OUI,NON,NON,,Commentaire du technicien

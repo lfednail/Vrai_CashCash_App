@@ -1,12 +1,21 @@
 import { searchClients } from "@/app/actions/client.actions";
-import { Search, User, Building2, MapPin, Package, History } from "lucide-react";
+import {
+  Search,
+  User,
+  Building2,
+  MapPin,
+  Package,
+  History,
+} from "lucide-react";
 import Link from "next/link";
 
 interface SearchPageProps {
   searchParams: Promise<{ q?: string }>;
 }
 
-export default async function RechercheClientPage({ searchParams }: SearchPageProps) {
+export default async function RechercheClientPage({
+  searchParams,
+}: SearchPageProps) {
   const { q } = await searchParams;
   const query = q?.trim() ?? "";
   const clients = query.length >= 2 ? await searchClients(query) : [];
@@ -14,8 +23,13 @@ export default async function RechercheClientPage({ searchParams }: SearchPagePr
   return (
     <div className="p-8 max-w-7xl mx-auto space-y-8">
       <div>
-        <h1 className="text-2xl font-bold text-slate-800 tracking-tight">Rechercher un client</h1>
-        <p className="text-slate-500 mt-1">Consultez l&apos;historique et les informations détaillées d&apos;un client.</p>
+        <h1 className="text-2xl font-bold text-slate-800 tracking-tight">
+          Rechercher un client
+        </h1>
+        <p className="text-slate-500 mt-1">
+          Consultez l&apos;historique et les informations détaillées d&apos;un
+          client.
+        </p>
       </div>
 
       {/* Barre de recherche */}
@@ -40,7 +54,9 @@ export default async function RechercheClientPage({ searchParams }: SearchPagePr
               Rechercher
             </button>
           </div>
-          <p className="text-xs text-slate-400 mt-2 ml-1">Saisissez au moins 2 caractères.</p>
+          <p className="text-xs text-slate-400 mt-2 ml-1">
+            Saisissez au moins 2 caractères.
+          </p>
         </form>
       </div>
 
@@ -66,8 +82,12 @@ export default async function RechercheClientPage({ searchParams }: SearchPagePr
                       <Building2 className="h-5 w-5" />
                     </div>
                     <div>
-                      <h2 className="font-bold text-slate-900 text-base leading-tight">{client.raisonSociale}</h2>
-                      <p className="text-xs text-slate-400 font-mono mt-0.5">#CLI-{String(client.numeroClient).padStart(5, "0")}</p>
+                      <h2 className="font-bold text-slate-900 text-base leading-tight">
+                        {client.raisonSociale}
+                      </h2>
+                      <p className="text-xs text-slate-400 font-mono mt-0.5">
+                        #CLI-{String(client.numeroClient).padStart(5, "0")}
+                      </p>
                     </div>
                   </div>
                   <span className="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded font-mono shrink-0">
@@ -106,10 +126,15 @@ export default async function RechercheClientPage({ searchParams }: SearchPagePr
                   <div className="border-t border-slate-100 pt-3">
                     <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1">
                       <History className="h-3.5 w-3.5" />
-                      {client.interventions.length} intervention{client.interventions.length > 1 ? "s" : ""} récente{client.interventions.length > 1 ? "s" : ""}
+                      {client.interventions.length} intervention
+                      {client.interventions.length > 1 ? "s" : ""} récente
+                      {client.interventions.length > 1 ? "s" : ""}
                     </div>
                     <p className="text-xs text-slate-500">
-                      Dernière le {new Date(client.interventions[0].dateVisite).toLocaleDateString("fr-FR")}
+                      Dernière le{" "}
+                      {new Date(
+                        client.interventions[0].dateVisite,
+                      ).toLocaleDateString("fr-FR")}
                     </p>
                   </div>
                 )}
@@ -134,9 +159,12 @@ export default async function RechercheClientPage({ searchParams }: SearchPagePr
           <div className="mx-auto h-16 w-16 mb-6 rounded-full bg-blue-50 flex items-center justify-center">
             <Search className="h-8 w-8 text-blue-400" />
           </div>
-          <h2 className="text-lg font-bold text-slate-800 mb-2">Trouver un profil client</h2>
+          <h2 className="text-lg font-bold text-slate-800 mb-2">
+            Trouver un profil client
+          </h2>
           <p className="text-slate-500 max-w-sm mx-auto text-sm">
-            Utilisez la barre de recherche ci-dessus pour retrouver un client par nom, numéro ou SIREN.
+            Utilisez la barre de recherche ci-dessus pour retrouver un client
+            par nom, numéro ou SIREN.
           </p>
         </div>
       )}
