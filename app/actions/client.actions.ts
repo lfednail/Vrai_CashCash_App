@@ -49,3 +49,25 @@ export async function searchClients(query: string) {
     take: 20,
   });
 }
+
+export async function getClientDetails(numeroClient: number) {
+  const session = await getServerSession(authOptions);
+  if (!session || session.user.role !== "TECHNICIEN") {
+    throw new Error("Non autorisé");
+  }
+
+  return prisma.client.findUnique({
+    where: { numeroClient },
+    include: {
+      materiels: {
+        include: { typeMateriel: true },
+      },
+      interventions: {
+        include: {
+           controles: true
+        },
+        orderBy: { dateVisite: "desc" },
+      },
+    },
+  });
+}

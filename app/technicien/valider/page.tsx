@@ -34,7 +34,7 @@ export default async function ValiderInterventionPage() {
             
             <div className="space-y-3 mb-6 flex-1 text-sm text-slate-600 mt-2">
                <p><strong>Date: </strong>{new Date(intervention.dateVisite).toLocaleDateString("fr-FR")}</p>
-               <p><strong>Matériels concernés: </strong>{intervention.controles.length}</p>
+               <p><strong>Matériels: </strong>{intervention.controles.filter((c: any) => c.tempsPasse !== null).length} / {intervention.controles.length}</p>
                <p><strong>Adresse: </strong>{intervention.client.adresse}</p>
             </div>
             

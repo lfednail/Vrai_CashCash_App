@@ -1,5 +1,7 @@
 import prisma from "@/lib/prisma";
+import { getGestionnaireStats, getTechniciansByAgency } from "@/app/actions/gestionnaire.actions";
 import { getServerSession } from "next-auth";
+import { serializePrisma } from "@/lib/serialization";
 import { authOptions } from "@/lib/auth";
 import { 
   Building2, 
@@ -18,9 +20,11 @@ import {
   Info,
   Clock,
   ExternalLink,
-  ChevronRight
+  ChevronRight,
+  BarChart3
 } from "lucide-react";
 import Link from "next/link";
+import DownloadActivityReportButton from "@/components/ui/download-activity-report-button";
 
 export default async function AgencePage() {
   const session = await getServerSession(authOptions);
@@ -52,6 +56,9 @@ export default async function AgencePage() {
   if (!employe || !employe.agence) return <div className="p-8 text-center text-slate-500">Agence non trouvée</div>;
   const agence = employe.agence;
 
+  const stats = await getGestionnaireStats();
+  const technicians = await getTechniciansByAgency();
+
   // Calculs statistiques
   const totalClients = agence.clients.length;
   const totalTechs = agence.employes.filter(e => e.technicien).length;
@@ -73,9 +80,14 @@ export default async function AgencePage() {
              
           </div>
           <div className="flex gap-4">
-              <button className="px-5 py-2.5 bg-slate-900 text-white rounded-xl text-sm font-bold shadow-lg hover:bg-slate-800 transition-all flex items-center gap-2">
-                 <ExternalLink className="h-4 w-4" /> Rapport d'Activité
-              </button>
+              <Link href="/gestionnaire" className="px-5 py-2.5 bg-white border border-slate-200 text-slate-600 rounded-xl text-sm font-bold shadow-sm hover:bg-slate-50 transition-all flex items-center gap-2">
+                 <BarChart3 className="h-4 w-4" /> Dashboard
+              </Link>
+              <DownloadActivityReportButton 
+                agence={serializePrisma(agence)} 
+                stats={serializePrisma(stats)} 
+                technicians={serializePrisma(technicians)} 
+              />
           </div>
       </div>
 
@@ -83,9 +95,9 @@ export default async function AgencePage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
             { label: "Clients Portefeuille", value: totalClients, icon: Users, color: "text-secondary", border: "border-secondary/20" },
-            { label: "Effectif Technicien", value: totalTechs, icon: User2, color: "text-emerald-600", border: "border-emerald-100" },
-            { label: "Unités de Parc", value: totalMateriels, icon: Zap, color: "text-orange-600", border: "border-orange-100" },
-            { label: "Contrats Actifs", value: totalContrats, icon: TrendingUp, color: "text-purple-600", border: "border-purple-100" },
+            { label: "Effectif Technicien", value: totalTechs, icon: User2, color: "text-emerald-800", border: "border-emerald-100" },
+            { label: "Unités de Parc", value: totalMateriels, icon: Zap, color: "text-orange-800", border: "border-orange-100" },
+            { label: "Contrats Actifs", value: totalContrats, icon: TrendingUp, color: "text-purple-800", border: "border-purple-100" },
           ].map((stat, i) => (
             <div key={i} className={`bg-white p-6 rounded-2xl border ${stat.border} shadow-sm flex flex-col justify-between h-40`}>
                 <div className="flex justify-between items-start">

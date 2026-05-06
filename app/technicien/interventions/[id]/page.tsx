@@ -1,7 +1,7 @@
+import { serializePrisma } from "@/lib/serialization";
 import prisma from "@/lib/prisma";
 import { getTechnicianInterventions } from "@/app/actions/intervention.actions";
 import { notFound } from "next/navigation";
-import Navbar from "@/components/ui/navbar";
 import { ArrowLeft, MapPin, Building2, Package, History } from "lucide-react";
 import Link from "next/link";
 import InterventionValidationForm from "@/app/technicien/interventions/[id]/validation-form";
@@ -15,7 +15,11 @@ export default async function InterventionDetailsPage({ params }: { params: { id
   const intervention = await prisma.intervention.findUnique({
     where: { numeroIntervent: numId },
     include: {
-      client: true,
+      client: {
+        include: {
+          agence: true,
+        },
+      },
       controles: {
         include: {
           materiel: {
@@ -27,7 +31,11 @@ export default async function InterventionDetailsPage({ params }: { params: { id
       },
       technicien: {
           include: {
-              employe: true
+              employe: {
+                  include: {
+                      agence: true
+                  }
+              }
           }
       }
     },
@@ -35,9 +43,10 @@ export default async function InterventionDetailsPage({ params }: { params: { id
 
   if (!intervention) notFound();
 
+  const serializedIntervention = serializePrisma(intervention);
+
   return (
     <div className="min-h-screen bg-slate-50 pb-20">
-      <Navbar />
 
       <main className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
         <Link href="/technicien" className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-900 mb-6 transition-colors">
@@ -85,7 +94,7 @@ export default async function InterventionDetailsPage({ params }: { params: { id
 
           {/* Validation Form & Materials */}
           <div className="lg:col-span-2">
-            <InterventionValidationForm intervention={intervention} />
+            <InterventionValidationForm intervention={serializedIntervention} />
           </div>
         </div>
       </main>

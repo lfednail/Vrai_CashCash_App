@@ -5,7 +5,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 
 
-export async function getGestionnaireStats() {
+export async function getGestionnaireStats(targetMonth?: number, targetYear?: number) {
   const session = await getServerSession(authOptions);
   if (!session || session.user.role !== "GESTIONNAIRE") {
     throw new Error("Non autorisé");
@@ -17,37 +17,38 @@ export async function getGestionnaireStats() {
     select: { numeroAgence: true },
   });
 
-  if (!user) throw new Error("Utilisateur non trouvé");
+  // On vérifie si l'utilisateur existe avant de continuer
+  if (!user) {
+    throw new Error("Employé gestionnaire non trouvé");
+  }
 
   const now = new Date();
-  const month = now.getMonth() + 1; // JS months are 0-indexed
-  const year = now.getFullYear();
+  const month = targetMonth || (now.getMonth() + 1);
+  const year = targetYear || now.getFullYear();
 
-  try {
-    const stats: any[] = await prisma.$queryRaw`CALL GetGestionnaireStats(${user.numeroAgence}, ${month}, ${year})`;
-    return stats[0]?.[0] || { total_interventions: 0, distance_parcourue_km: 0, temps_total_minutes: 0 };
-  } catch (error) {
-    // Fallback Prisma si la procédure n'est pas encore créée en base
-    const interventions = await prisma.intervention.findMany({
-      where: {
-        client: { numeroAgence: user.numeroAgence },
-        dateVisite: {
-          gte: new Date(year, month - 1, 1),
-          lt: new Date(year, month, 1),
-        },
+  // Définition des bornes du mois en UTC pour une cohérence parfaite avec le graphique
+  const startDate = new Date(Date.UTC(year, month - 1, 1));
+  const endDate = new Date(Date.UTC(year, month, 1));
+
+  const interventions = await prisma.intervention.findMany({
+    where: {
+      client: { numeroAgence: user.numeroAgence },
+      dateVisite: {
+        gte: startDate,
+        lt: endDate,
       },
-      include: {
-        client: true,
-        controles: true,
-      },
-    });
+    },
+    include: {
+      client: true,
+      controles: true,
+    },
+  });
 
-    const total_interventions = interventions.length;
-    const distance_parcourue_km = interventions.reduce((acc, i) => acc + (i.client.distanceKM * 2), 0);
-    const temps_total_minutes = interventions.reduce((acc, i) => acc + i.controles.reduce((sum, c) => sum + (c.tempsPasse || 0), 0), 0);
+  const total_interventions = interventions.length;
+  const distance_parcourue_km = interventions.reduce((acc, i) => acc + (i.client.distanceKM * 2), 0);
+  const temps_total_minutes = interventions.reduce((acc, i) => acc + i.controles.reduce((sum, c) => sum + (c.tempsPasse || 0), 0), 0);
 
-    return { total_interventions, distance_parcourue_km, temps_total_minutes };
-  }
+  return { total_interventions, distance_parcourue_km, temps_total_minutes };
 }
 
 export async function getClientsWithMaterials() {
@@ -60,8 +61,10 @@ export async function getClientsWithMaterials() {
     where: { matricule: session.user.id },
   });
 
+  if (!user) throw new Error("Employé non trouvé");
+
   const clients = await prisma.client.findMany({
-    where: { numeroAgence: user?.numeroAgence },
+    where: { numeroAgence: user.numeroAgence },
     include: {
       materiels: {
         where: {
@@ -97,10 +100,12 @@ export async function getTechniciansByAgency() {
         where: { matricule: session.user.id },
     });
 
+    if (!user) throw new Error("Employé non trouvé");
+
     return await prisma.technicien.findMany({
         where: {
             employe: {
-                numeroAgence: user?.numeroAgence
+                numeroAgence: user.numeroAgence
             }
         },
         include: {
@@ -193,7 +198,10 @@ export async function getClientMaterials(clientId: number) {
 /**
  * Statistiques hebdomadaires pour les graphiques.
  */
-export async function getWeeklyStats() {
+/**
+ * Statistiques d'activité pour les graphiques, adaptées au mois sélectionné.
+ */
+export async function getMonthlyActivity(targetMonth?: number, targetYear?: number) {
     const session = await getServerSession(authOptions);
     if (!session || session.user.role !== "GESTIONNAIRE") throw new Error("Non autorisé");
 
@@ -201,31 +209,39 @@ export async function getWeeklyStats() {
         where: { matricule: session.user.id },
     });
 
-    const end = new Date();
-    const start = new Date();
-    start.setDate(end.getDate() - 7);
+    if (!user) throw new Error("Employé non trouvé");
+
+    const now = new Date();
+    const month = targetMonth || (now.getMonth() + 1);
+    const year = targetYear || now.getFullYear();
+
+    // Début et fin du mois
+    const start = new Date(Date.UTC(year, month - 1, 1));
+    const end = new Date(Date.UTC(year, month, 1));
 
     const interventions = await prisma.intervention.findMany({
       where: {
-        client: { numeroAgence: user?.numeroAgence },
-        dateVisite: { gte: start, lte: end },
+        client: { numeroAgence: user.numeroAgence },
+        dateVisite: { gte: start, lt: end },
       },
       select: { dateVisite: true },
     });
 
-    // Agréger par jour
+    // Agréger par jour pour tout le mois
+    const daysInMonth = new Date(year, month, 0).getDate();
     const stats: Record<string, number> = {};
-    for (let i = 0; i <= 7; i++) {
-        const d = new Date();
-        d.setDate(end.getDate() - i);
-        const dayStr = d.toLocaleDateString("fr-FR", { weekday: 'short' });
-        stats[dayStr] = 0;
+    
+    // On initialise tous les jours du mois à 0
+    for (let i = 1; i <= daysInMonth; i++) {
+        const d = new Date(year, month - 1, i);
+        const dayKey = d.toLocaleDateString("fr-FR", { day: 'numeric', month: 'short' });
+        stats[dayKey] = 0;
     }
 
     interventions.forEach(i => {
-        const dayStr = new Date(i.dateVisite).toLocaleDateString("fr-FR", { weekday: 'short' });
-        if (stats[dayStr] !== undefined) stats[dayStr]++;
+        const dayKey = new Date(i.dateVisite).toLocaleDateString("fr-FR", { day: 'numeric', month: 'short' });
+        if (stats[dayKey] !== undefined) stats[dayKey]++;
     });
 
-    return Object.entries(stats).reverse().map(([day, count]) => ({ day, count }));
+    return Object.entries(stats).map(([day, count]) => ({ day, count }));
 }

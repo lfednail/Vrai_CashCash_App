@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "jest"
   },
   "prisma": {
     "seed": "npx tsx prisma/seed.ts"
@@ -15,10 +16,12 @@
     "@prisma/client": "^6.12.0",
     "bcryptjs": "^3.0.3",
     "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
     "dotenv": "^17.3.1",
     "jspdf": "^4.2.1",
     "jspdf-autotable": "^5.0.7",
     "lucide-react": "^1.7.0",
+    "mysql2": "^3.22.3",
     "next": "16.2.1",
     "next-auth": "^4.24.13",
     "react": "19.2.4",
@@ -30,14 +33,19 @@
     "@tailwindcss/postcss": "^4.2.2",
     "@types/bcrypt": "^6.0.0",
     "@types/bcryptjs": "^3.0.0",
+    "@types/jest": "^30.0.0",
     "@types/mysql": "^2.15.27",
     "@types/node": "^25.5.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "eslint": "^10.1.0",
     "eslint-config-next": "16.2.1",
+    "jest": "^30.3.0",
+    "jest-mock-extended": "^4.0.1",
     "prisma": "^6.12.0",
     "tailwindcss": "^4",
+    "ts-jest": "^29.4.9",
+    "ts-node": "^10.9.2",
     "typescript": "^5"
   }
 }

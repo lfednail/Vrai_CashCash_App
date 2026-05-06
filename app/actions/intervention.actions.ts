@@ -1,5 +1,6 @@
 "use server";
 
+import { serializePrisma } from "@/lib/serialization";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
@@ -14,7 +15,7 @@ export async function getTechnicianInterventions() {
 
   const matricule = session.user.id;
 
-  return await prisma.intervention.findMany({
+  const interventions = await prisma.intervention.findMany({
     where: { matriculeTechnicien: matricule },
     include: {
       client: true,
@@ -25,9 +26,11 @@ export async function getTechnicianInterventions() {
       },
     },
     orderBy: {
-      dateVisite: "asc",
+      dateVisite: "desc",
     },
   });
+
+  return serializePrisma(interventions);
 }
 
 export async function validateIntervention(
@@ -55,6 +58,6 @@ export async function validateIntervention(
     });
   }
 
-  revalidatePath("/technicien");
+  revalidatePath("/technicien", "layout");
   return { success: true };
 }

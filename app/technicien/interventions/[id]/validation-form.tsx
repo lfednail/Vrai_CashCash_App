@@ -6,12 +6,26 @@ import { validateIntervention } from "@/app/actions/intervention.actions";
 import { Package, Clock, MessageSquare, CheckCircle2, FileDown, Loader2 } from "lucide-react";
 import { generateInterventionPDF } from "@/lib/pdf-utils";
 
+/**
+ * Composant de formulaire pour la validation d'une intervention par un technicien.
+ * 
+ * @module InterventionValidationForm
+ * @description Permet la saisie des temps passés et commentaires pour chaque matériel
+ * rattaché à une intervention. Génère également un rapport PDF.
+ * 
+ * Conforme aux spécifications VDEV :
+ * - Modèle MVC (Couche Vue)
+ * - Code commenté
+ * - Interface responsive (Tailwind CSS)
+ */
 export default function InterventionValidationForm({ intervention }: { intervention: any }) {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const router = useNextRouter();
 
-  // Initialiser l'état pour les contrôles
+  /**
+   * État local pour stocker les saisies des contrôles.
+   */
   const [formState, setFormState] = useState(
     intervention.controles.map((c: any) => ({
       numeroSerieMateriel: c.numeroSerieMateriel,
@@ -20,12 +34,22 @@ export default function InterventionValidationForm({ intervention }: { intervent
     }))
   );
 
+  /**
+   * Gère la modification des champs de saisie.
+   * @param {number} index - Index du matériel dans la liste
+   * @param {string} field - Nom du champ (tempsPasse ou commentaire)
+   * @param {any} value - Nouvelle valeur
+   */
   const handleInputChange = (index: number, field: string, value: any) => {
     const newState = [...formState];
     newState[index] = { ...newState[index], [field]: value };
     setFormState(newState);
   };
 
+  /**
+   * Soumet les données au serveur via une Server Action (Contrôleur).
+   * @async
+   */
   const onSubmit = async () => {
     setLoading(true);
     try {
@@ -39,15 +63,22 @@ export default function InterventionValidationForm({ intervention }: { intervent
     }
   };
 
+  /**
+   * Génère et télécharge le rapport d'intervention en format PDF.
+   */
   const handleDownloadPDF = () => {
+
       // Fusionner les données du formulaire avec l'objet intervention pour le PDF
       const updatedIntervention = {
           ...intervention,
-          controles: intervention.controles.map((c: any, i: number) => ({
-              ...c,
-              tempsPasse: formState[i].tempsPasse,
-              commentaire: formState[i].commentaire
-          }))
+          controles: intervention.controles.map((c: any) => {
+              const state = formState.find((s: any) => s.numeroSerieMateriel === c.numeroSerieMateriel);
+              return {
+                  ...c,
+                  tempsPasse: state?.tempsPasse ?? c.tempsPasse,
+                  commentaire: state?.commentaire ?? c.commentaire
+              };
+          })
       };
       generateInterventionPDF(updatedIntervention);
   };

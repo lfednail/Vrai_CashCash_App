@@ -1,0 +1,45 @@
+---
+config:
+  theme: base
+  themeVariables:
+    primaryColor: '#e1f5fe'
+    edgeLabelBackground: '#ffffff'
+    tertiaryColor: '#f1f8e9'
+  layout: elk
+---
+flowchart TB
+ subgraph GESTION["👑 ESPACE GESTIONNAIRE"]
+        G_Clients["👥 Clients<br><i>/gestionnaire/clients</i>"]
+        GestDash["📊 Dashboard Gestionnaire<br><i>/gestionnaire</i>"]
+        G_Techs["👷 Techniciens<br><i>/gestionnaire/techniciens</i>"]
+        G_Assign["📅 Assigner<br><i>/gestionnaire/assigner</i>"]
+        G_Agence["🏢 Agence<br><i>/gestionnaire/agence</i>"]
+        G_Client_New["➕ Nouveau Client"]
+        G_Client_Det["🔍 Détails Client"]
+  end
+ subgraph DATA["💾 COUCHE DE DONNÉES"]
+        Prisma[["💎 Prisma ORM"]]
+        DB[("🗄️ MySQL Database")]
+  end
+ subgraph TECH["🔧 ESPACE TECHNICIEN"]
+        T_Inter["📋 Mes Interventions<br><i>/technicien/interventions</i>"]
+        TechDash["🛠️ Dashboard Technicien<br><i>/technicien</i>"]
+        T_Search["🔍 Recherche Matériel<br><i>/technicien/recherche</i>"]
+        T_Report@{ label: "📝 Rapports d'activité<br><i>/technicien/reports</i>" }
+        T_Valid["✅ Validation<br><i>/technicien/valider</i>"]
+  end
+    Start(("🏠 Accueil")) --> Login["🔐 Connexion<br><i>/login</i>"]
+    Login --> Auth{Role:}
+    Auth -->|Gestionnaire| GestDash
+    Auth -->|Technicien| TechDash
+    GestDash --> G_Clients & G_Techs & G_Assign & G_Agence
+    G_Clients --> G_Client_New & G_Client_Det
+    Prisma <--> DB
+    TechDash --> T_Inter & T_Search & T_Report & T_Valid
+    GESTION -.-> Prisma
+    TECH -.-> Prisma
+
+    T_Report@{ shape: rect}
+    style GESTION fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    style TECH fill:#f1f8e9,stroke:#388e3c,stroke-width:2px
+    style DATA fill:#fff3e0,stroke:#f57c00,stroke-width:2px

@@ -1,4 +1,4 @@
-import { getGestionnaireStats, getTechniciansByAgency, getWeeklyStats } from "@/app/actions/gestionnaire.actions";
+import { getGestionnaireStats, getTechniciansByAgency, getMonthlyActivity } from "@/app/actions/gestionnaire.actions";
 import WeeklyStatsChart from "@/components/ui/weekly-stats-chart";
 import { 
   Users, 
@@ -9,22 +9,32 @@ import {
   CalendarDays,
   Activity
 } from "lucide-react";
+import MonthSelector from "@/components/ui/month-selector";
 
-export default async function GestionnaireDashboard() {
-  const stats = await getGestionnaireStats();
+export default async function GestionnaireDashboard({ searchParams }: { searchParams: { month?: string; year?: string } }) {
+  const params = await searchParams;
+  const currentMonth = params.month ? parseInt(params.month) : new Date().getMonth() + 1;
+  const currentYear = params.year ? parseInt(params.year) : new Date().getFullYear();
+
+  const stats = await getGestionnaireStats(currentMonth, currentYear);
   const technicians = await getTechniciansByAgency();
-  const weeklyStats = await getWeeklyStats();
+  const monthlyActivity = await getMonthlyActivity(currentMonth, currentYear);
+
+  const prevMonth = currentMonth === 1 ? 12 : currentMonth - 1;
+  const prevYear = currentMonth === 1 ? currentYear - 1 : currentYear;
+  const nextMonth = currentMonth === 12 ? 1 : currentMonth + 1;
+  const nextYear = currentMonth === 12 ? currentYear + 1 : currentYear;
 
   const cards = [
     {
-      title: "Interventions ce mois",
+      title: `Interventions en ${new Intl.DateTimeFormat('fr-FR', { month: 'long' }).format(new Date(currentYear, currentMonth - 1))}`,
       value: stats.total_interventions,
       icon: ClipboardCheck,
       color: "text-slate-600",
       bg: "bg-secondary/20"
     },
     {
-      title: "Distance totale parcourue",
+      title: "Distance totale (Aller/Retour)",
       value: `${stats.distance_parcourue_km} km`,
       icon: MapPin,
       color: "text-emerald-600",
@@ -52,11 +62,11 @@ export default async function GestionnaireDashboard() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-slate-800 tracking-tight text-left">Tableau de bord Gestionnaire</h1>
-          <p className="text-slate-500 mt-1 text-left">Aperçu de l'activité de votre agence pour le mois en cours</p>
+          <p className="text-slate-500 mt-1 text-left">Aperçu de l'activité de votre agence</p>
         </div>
-        <div className="flex items-center gap-2 rounded-xl bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm border border-slate-200">
-          <CalendarDays className="h-4 w-4 text-emerald-600" />
-          {new Intl.DateTimeFormat('fr-FR', { month: 'long', year: 'numeric' }).format(new Date())}
+        
+        <div className="flex items-center gap-4">
+          <MonthSelector initialMonth={currentMonth} initialYear={currentYear} />
         </div>
       </div>
 
@@ -114,16 +124,15 @@ export default async function GestionnaireDashboard() {
           <div className="flex items-center justify-between mb-8">
               <h3 className="font-bold text-slate-800 flex items-center gap-2">
                   <Activity className="h-5 w-5 text-emerald-600" />
-                  Performance hebdomadaire (Nb d'interventions)
+                  Performance mensuelle (Nb d'interventions)
               </h3>
               <div className="flex items-center gap-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                   <span className="h-2 w-2 rounded-full bg-secondary"></span>
                   Interventions Validées
               </div>
           </div>
-          
-          <div className="flex-1 flex flex-col justify-end">
-            <WeeklyStatsChart data={weeklyStats} />
+          <div className="h-[350px] w-full flex flex-col justify-end">
+            <WeeklyStatsChart data={monthlyActivity} />
           </div>
         </div>
       </div>

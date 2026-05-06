@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createIntervention } from "@/app/actions/assignation.actions";
 import { User, Building2, Calendar, Clock, Package, AlertCircle, CheckCircle2, Loader2 } from "lucide-react";
+import { DatePicker } from "@/components/ui/date-picker";
 
 export default function AssignationForm({ clients, technicians }: { clients: any[], technicians: any[] }) {
   const router = useRouter();
@@ -136,20 +137,20 @@ export default function AssignationForm({ clients, technicians }: { clients: any
             Date & Heure
           </label>
           <div className="grid grid-cols-2 gap-4">
-            <input 
-              type="date"
-              value={formData.dateVisite}
-              onChange={(e) => setFormData({...formData, dateVisite: e.target.value})}
-              className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
-              required
+            <DatePicker 
+              date={formData.dateVisite ? new Date(formData.dateVisite) : undefined}
+              onChange={(date) => setFormData({...formData, dateVisite: date ? date.toISOString().split('T')[0] : ""})}
             />
-            <input 
-              type="time"
-              value={formData.heureVisite}
-              onChange={(e) => setFormData({...formData, heureVisite: e.target.value})}
-              className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
-              required
-            />
+            <div className="flex flex-col gap-2">
+                <label className="text-xs font-semibold text-slate-500 uppercase">Heure</label>
+                <input 
+                  type="time"
+                  value={formData.heureVisite}
+                  onChange={(e) => setFormData({...formData, heureVisite: e.target.value})}
+                  className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  required
+                />
+            </div>
           </div>
         </div>
       </div>

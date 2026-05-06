@@ -13,6 +13,8 @@ import {
   Edit
 } from "lucide-react";
 import Link from "next/link";
+import DashboardInterventionsList from "@/components/ui/dashboard-interventions-list";
+import DashboardClientSearch from "@/components/ui/dashboard-client-search";
 
 export default async function TechnicienDashboard() {
   const session = await getServerSession(authOptions);
@@ -106,18 +108,8 @@ export default async function TechnicienDashboard() {
       <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6 space-y-4">
         <h2 className="text-lg font-bold text-slate-800">Rechercher un client</h2>
         <div className="space-y-1">
-          <label className="text-sm text-slate-500 font-medium">Numéro de client</label>
-          <div className="flex gap-4">
-            <input 
-              type="text" 
-              placeholder="Entrez le numéro de client" 
-              className="flex-1 rounded-lg border border-slate-200 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-secondary"
-            />
-            <Link href="/technicien/recherche" className="bg-primary hover:bg-primary-hover text-white px-6 py-2.5 rounded-lg flex items-center gap-2 font-medium transition-colors">
-              <Search className="h-4 w-4" />
-              Aller à la recherche
-            </Link>
-          </div>
+          <label className="text-sm text-slate-500 font-medium">Numéro de client, Nom ou SIREN</label>
+          <DashboardClientSearch />
         </div>
       </div>
 
@@ -125,79 +117,9 @@ export default async function TechnicienDashboard() {
       <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden space-y-4 pt-6">
         <div className="px-6 flex justify-between items-center">
           <h2 className="text-lg font-bold text-slate-800">Mes interventions récentes</h2>
-          <div className="flex gap-3">
-            <button className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-600 font-medium hover:bg-slate-50 transition-colors">
-              <Filter className="h-4 w-4" />
-              Filtrer
-            </button>
-            <button className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-600 font-medium hover:bg-slate-50 transition-colors">
-              <CalendarIcon className="h-4 w-4" />
-              Date
-            </button>
-          </div>
         </div>
 
-        <div className="w-full overflow-x-auto border-t border-slate-100 mt-4">
-          <table className="w-full text-sm text-left">
-            <thead className="text-xs text-slate-500 uppercase bg-slate-50/50">
-              <tr>
-                <th className="px-6 py-4 font-semibold">Client</th>
-                <th className="px-6 py-4 font-semibold">Adresse</th>
-                <th className="px-6 py-4 font-semibold">Date & Heure</th>
-                <th className="px-6 py-4 font-semibold">Statut</th>
-                <th className="px-6 py-4 font-semibold">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {interventions.length === 0 ? (
-                <tr>
-                  <td colSpan={5} className="px-6 py-8 text-center text-slate-500">
-                    Aucune intervention prévue.
-                  </td>
-                </tr>
-              ) : (
-                interventions.slice(0, 5).map((intervention, index) => {
-                  const pending = isPending(intervention);
-                  const isToday = new Date(intervention.dateVisite).toDateString() === today;
-                  
-                  return (
-                    <tr key={intervention.numeroIntervent} className="hover:bg-slate-50/50 transition-colors group">
-                      <td className={`px-6 py-4 border-l-4 ${pending ? "border-l-yellow-400" : "border-l-emerald-500"}`}>
-                        <div className="font-bold text-slate-900">{intervention.client.raisonSociale}</div>
-                        <div className="text-slate-400 text-xs mt-0.5">#CLI-{String(intervention.client.numeroClient).padStart(5, '0')}</div>
-                      </td>
-                      <td className="px-6 py-4 text-slate-600">
-                        {intervention.client.adresse}
-                      </td>
-                      <td className="px-6 py-4 text-slate-600">
-                        <div>
-                          {isToday ? "Aujourd'hui" : new Date(intervention.dateVisite).toLocaleDateString("fr-FR")}
-                        </div>
-                        <div className="text-slate-500 text-xs mt-0.5">
-                          {new Date(intervention.heureVisite).toLocaleTimeString("fr-FR", { hour: '2-digit', minute: '2-digit' })}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        {pending ? (
-                          <span className="px-2.5 py-1 text-xs font-semibold rounded-full text-yellow-700 bg-yellow-100">En attente</span>
-                        ) : (
-                          <span className="px-2.5 py-1 text-xs font-semibold rounded-full text-emerald-700 bg-emerald-100">Validée</span>
-                        )}
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex gap-3">
-                          <Link href={`/technicien/interventions/${intervention.numeroIntervent}`} className="text-secondary hover:text-secondary/80 transition-colors text-xs font-bold uppercase tracking-widest flex items-center gap-1">
-                            {pending ? <><Edit className="h-4 w-4" /> Compléter</> : <><Eye className="h-4 w-4" /> Voir</>}
-                          </Link>
-                        </div>
-                      </td>
-                    </tr>
-                  )
-                })
-              )}
-            </tbody>
-          </table>
-        </div>
+        <DashboardInterventionsList initialInterventions={interventions} />
         
         <div className="px-6 py-4 border-t border-slate-100 flex items-center justify-between text-sm text-slate-500">
           <div>
