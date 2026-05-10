@@ -1,7 +1,9 @@
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { Users, Search, Phone, Mail, Award, Calendar } from "lucide-react";
+import { Users, Search, Phone, Mail, Award, Calendar, Edit, UserPlus } from "lucide-react";
+import Link from "next/link";
+import DeleteTechButton from "@/components/ui/DeleteTechButton";
 
 export default async function TechniciensPage() {
   const session = await getServerSession(authOptions);
@@ -34,9 +36,14 @@ export default async function TechniciensPage() {
 
   return (
     <div className="p-8 max-w-7xl mx-auto space-y-8">
-      <div>
-        <h1 className="text-2xl font-bold text-slate-800 tracking-tight">Nos Techniciens</h1>
-        <p className="text-slate-500 mt-1">Liste des experts techniques de votre agence et leurs performances.</p>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-800 tracking-tight">Nos Techniciens</h1>
+          <p className="text-slate-500 mt-1">Liste des experts techniques de votre agence et leurs performances.</p>
+        </div>
+        <Link href="/gestionnaire/techniciens/nouveau" className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl font-medium shadow-sm hover:bg-primary-hover transition-colors cursor-pointer text-sm">
+           <UserPlus className="h-4 w-4" /> Ajouter un technicien
+        </Link>
       </div>
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -47,13 +54,25 @@ export default async function TechniciensPage() {
 
           return (
             <div key={tech.matricule} className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-shadow">
-              <div className="p-6 bg-slate-50/50 border-b border-slate-100 flex items-center gap-4">
-                <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary font-bold text-xl">
-                  {tech.employe.prenomEmploye[0]}{tech.employe.nomEmploye[0]}
+              <div className="p-6 bg-slate-50/50 border-b border-slate-100 flex items-center justify-between gap-2">
+                <div className="flex items-center gap-4 truncate">
+                  <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary font-bold text-xl shrink-0">
+                    {tech.employe.prenomEmploye[0]}{tech.employe.nomEmploye[0]}
+                  </div>
+                  <div className="truncate">
+                    <h2 className="font-bold text-slate-900 truncate">{tech.employe.prenomEmploye} {tech.employe.nomEmploye}</h2>
+                    <p className="text-xs font-mono text-slate-400">{tech.matricule}</p>
+                  </div>
                 </div>
-                <div>
-                  <h2 className="font-bold text-slate-900">{tech.employe.prenomEmploye} {tech.employe.nomEmploye}</h2>
-                  <p className="text-xs font-mono text-slate-400">{tech.matricule}</p>
+                <div className="flex items-center gap-1 shrink-0">
+                  <Link 
+                    href={`/gestionnaire/techniciens/${tech.matricule}/modifier`}
+                    className="p-2 text-slate-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-all"
+                    title="Modifier le technicien"
+                  >
+                    <Edit className="h-4 w-4" />
+                  </Link>
+                  <DeleteTechButton matricule={tech.matricule} nom={`${tech.employe.prenomEmploye} ${tech.employe.nomEmploye}`} />
                 </div>
               </div>
 

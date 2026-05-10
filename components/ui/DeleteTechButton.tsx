@@ -3,9 +3,9 @@
 import { useState } from "react";
 import { Trash2, AlertTriangle, X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { deleteClient } from "@/app/actions/gestionnaire.actions";
+import { deleteTechnicien } from "@/app/actions/gestionnaire.actions";
 
-export default function DeleteClientButton({ clientId, clientName }: { clientId: number, clientName: string }) {
+export default function DeleteTechButton({ matricule, nom }: { matricule: string, nom: string }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
@@ -13,12 +13,12 @@ export default function DeleteClientButton({ clientId, clientName }: { clientId:
   const handleDelete = async () => {
     setLoading(true);
     try {
-      await deleteClient(clientId);
+      await deleteTechnicien(matricule);
       setShowConfirm(false);
       router.refresh();
     } catch (error) {
       console.error(error);
-      alert("Erreur lors de la suppression.");
+      alert("Erreur lors de la suppression. Le technicien a peut-être des interventions associées.");
     } finally {
       setLoading(false);
     }
@@ -30,7 +30,7 @@ export default function DeleteClientButton({ clientId, clientName }: { clientId:
         onClick={() => setShowConfirm(true)}
         disabled={loading}
         className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all disabled:opacity-50"
-        title="Supprimer le client"
+        title="Supprimer le technicien"
       >
         {loading ? (
           <div className="h-4 w-4 border-2 border-red-500/30 border-t-red-500 rounded-full animate-spin" />
@@ -49,7 +49,7 @@ export default function DeleteClientButton({ clientId, clientName }: { clientId:
                     <Trash2 className="h-5 w-5" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-slate-800 tracking-tight">Supprimer le client</h3>
+                    <h3 className="text-lg font-bold text-slate-800 tracking-tight">Supprimer le technicien</h3>
                   </div>
                 </div>
                 <button 
@@ -62,10 +62,10 @@ export default function DeleteClientButton({ clientId, clientName }: { clientId:
               
               <div className="bg-slate-50/50 border border-slate-100 rounded-xl p-4 mb-6">
                 <p className="text-slate-500 text-sm leading-relaxed">
-                  Êtes-vous sûr de vouloir supprimer définitivement le client <strong className="text-slate-800 font-bold">{clientName}</strong> ?
+                  Êtes-vous sûr de vouloir supprimer définitivement le technicien <strong className="text-slate-800 font-bold">{nom}</strong> ?
                   <br /><br />
                   <span className="text-xs text-red-500 flex items-center gap-1.5 font-medium">
-                    <AlertTriangle className="h-3.5 w-3.5" /> Toutes les données, contrats et matériels seront perdus.
+                    <AlertTriangle className="h-3.5 w-3.5" /> L'accès de cet employé sera révoqué.
                   </span>
                 </p>
               </div>

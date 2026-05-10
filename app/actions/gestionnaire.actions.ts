@@ -3,6 +3,7 @@
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import bcrypt from "bcryptjs";
 
 
 export async function getGestionnaireStats(targetMonth?: number, targetYear?: number) {
@@ -367,5 +368,90 @@ export async function updateClient(clientId: number, data: any) {
   return prisma.client.update({
     where: { numeroClient: clientId },
     data,
+  });
+}
+
+/**
+ * Création d'un Technicien (Employé + Technicien)
+ */
+export async function createTechnicien(data: any) {
+  const session = await getServerSession(authOptions);
+  if (!session || session.user.role !== "GESTIONNAIRE") throw new Error("Non autorisé");
+
+  const gestionnaire = await prisma.employe.findUnique({
+    where: { matricule: session.user.id },
+  });
+  if (!gestionnaire) throw new Error("Gestionnaire non trouvé");
+
+  const hashedPassword = await bcrypt.hash(data.mot_de_passe, 10);
+
+  return prisma.$transaction(async (tx) => {
+    const employe = await tx.employe.create({
+      data: {
+        matricule: data.matricule,
+        nomEmploye: data.nomEmploye,
+        prenomEmploye: data.prenomEmploye,
+        adresseEmploye: data.adresseEmploye,
+        dateEmbauche: new Date(data.dateEmbauche),
+        numeroAgence: gestionnaire.numeroAgence,
+        email: data.email,
+        mot_de_passe: hashedPassword,
+        role: "TECHNICIEN",
+      },
+    });
+
+    const technicien = await tx.technicien.create({
+      data: {
+        matricule: data.matricule,
+        telephoneMobile: data.telephoneMobile,
+        qualification: data.qualification,
+        dateObtention: data.dateObtention ? new Date(data.dateObtention) : null,
+      },
+    });
+
+    return { employe, technicien };
+  });
+}
+
+/**
+ * Mise à jour d'un Technicien
+ */
+export async function updateTechnicien(matricule: string, data: any) {
+  const session = await getServerSession(authOptions);
+  if (!session || session.user.role !== "GESTIONNAIRE") throw new Error("Non autorisé");
+
+  return prisma.$transaction(async (tx) => {
+    const employe = await tx.employe.update({
+      where: { matricule },
+      data: {
+        nomEmploye: data.nomEmploye,
+        prenomEmploye: data.prenomEmploye,
+        adresseEmploye: data.adresseEmploye,
+        email: data.email,
+      },
+    });
+
+    const technicien = await tx.technicien.update({
+      where: { matricule },
+      data: {
+        telephoneMobile: data.telephoneMobile,
+        qualification: data.qualification,
+        dateObtention: data.dateObtention ? new Date(data.dateObtention) : null,
+      },
+    });
+
+    return { employe, technicien };
+  });
+}
+
+/**
+ * Supprime un technicien (supprime l'employé associé et le technicien en cascade)
+ */
+export async function deleteTechnicien(matricule: string) {
+  const session = await getServerSession(authOptions);
+  if (!session || session.user.role !== "GESTIONNAIRE") throw new Error("Non autorisé");
+
+  return prisma.employe.delete({
+    where: { matricule },
   });
 }
