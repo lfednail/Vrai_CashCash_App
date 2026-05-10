@@ -1,8 +1,9 @@
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { Building2, MapPin, Package, FileCheck, Phone, Mail, Search } from "lucide-react";
+import { Building2, MapPin, Package, FileCheck, Phone, Mail, Search, Edit } from "lucide-react";
 import Link from "next/link";
+import DeleteClientButton from "@/components/ui/DeleteClientButton";
 
 export default async function ClientsPage() {
   const session = await getServerSession(authOptions);
@@ -56,6 +57,16 @@ export default async function ClientsPage() {
                 <div>
                   <h2 className="font-bold text-slate-900 leading-tight">{client.raisonSociale}</h2>
                   <p className="text-xs text-slate-400 font-mono">SIREN {client.siren}</p>
+                </div>
+                <div className="ml-auto flex items-center gap-1">
+                  <Link 
+                    href={`/gestionnaire/clients/${client.numeroClient}/modifier`}
+                    className="p-2 text-slate-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-all"
+                    title="Modifier le client"
+                  >
+                    <Edit className="h-4 w-4" />
+                  </Link>
+                  <DeleteClientButton clientId={client.numeroClient} clientName={client.raisonSociale} />
                 </div>
               </div>
               
