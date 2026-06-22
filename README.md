@@ -1,3 +1,7 @@
+![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=nextdotjs)
+![Prisma](https://img.shields.io/badge/Prisma-ORM-blue?logo=prisma)
+![License](https://img.shields.io/badge/License-MIT-green)
+
 # CASHCASH - Gestion des Interventions
 
 CASHCASH est une application web professionnelle de gestion de maintenance et d'interventions techniques, conçue pour répondre aux exigences des entreprises de services numériques (ESN).
